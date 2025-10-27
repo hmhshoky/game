@@ -14,10 +14,10 @@ public class GameManager : MonoBehaviour
     private int previousStage = 1; 
 
     private float[] stageZone = { 0f, 300f, 800f, 1400f, 2000f };
-    private float[] stageBaseSpeeds = { 3f, 3.5f, 3.7f, 4f, 5f };
+    private float[] stageBaseSpeeds = { 3f, 3.1f, 3.3f, 3.4f, 3.5f };
     //Score wächst mit Stage
     private float[] stageScoreMultipliers = { 1.0f, 1.2f, 1.4f, 1.6f, 1.7f };
-    private int[] stageObstacleCounts = { 1, 1, 2, 2, 2 };
+    private int[] stageObstacleCounts = { 1, 1, 2, 3, 3 };
     void Update()
     {
         //Zeit läuft hoch
@@ -40,10 +40,30 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: " + Mathf.FloorToInt(score) + "m";
         stageText.text = "Stage: " + currentStage;
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Z))
         {
-            gameTime += 1;
-            score += 1;
+            gameTime = 1;
+            score = 1;
+        }
+        if (Input.GetKey(KeyCode.U))
+        {
+            gameTime = 300;
+            score = 300;
+        }
+        if (Input.GetKey(KeyCode.I))
+        {
+            gameTime = 800;
+            score = 800;
+        }
+        if (Input.GetKey(KeyCode.O))
+        {
+            gameTime = 1400;
+            score = 1400;
+        }
+        if (Input.GetKey(KeyCode.P))
+        {
+            gameTime = 2000;
+            score = 2000;
         }
     }
     
@@ -70,7 +90,7 @@ public class GameManager : MonoBehaviour
     void stagePause()
     {
         //kurze Spawn-Pause
-        ObstacleSpawner spawner = FindObjectOfType<ObstacleSpawner>();
+        ObstacleSpawner spawner = FindFirstObjectByType<ObstacleSpawner>();
         if (spawner != null)
         {
             spawner.PauseSpawning(2f);

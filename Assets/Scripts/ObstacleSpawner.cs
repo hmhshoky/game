@@ -23,7 +23,7 @@ public class ObstacleSpawner : MonoBehaviour
     
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
         UpdateSpawnTimesForStage();
         SetRandomSpawnTime();
     }

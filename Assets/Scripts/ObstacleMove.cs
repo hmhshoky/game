@@ -8,7 +8,7 @@ public class ObstacleMove : MonoBehaviour
     void Start()
     {
         //Speed beim Spawnen
-        GameManager gameManager = FindObjectOfType<GameManager>();
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
         currentSpeed = baseSpeed * gameManager.GetSpeedMultiplier();
     }
     

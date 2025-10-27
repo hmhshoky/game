@@ -32,16 +32,16 @@ Material:
     m_Floats:
     - _ColorMask: 15
     - _CullMode: 0
-    - _FaceDilate: 0.13
+    - _FaceDilate: 0.42
     - _GradientScale: 10
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
-    - _OutlineSoftness: 0
-    - _OutlineWidth: 0.32
+    - _OutlineSoftness: 0.174
+    - _OutlineWidth: 0.205
     - _PerspectiveFilter: 0.875
     - _ScaleRatioA: 0.9
     - _ScaleRatioB: 1
-    - _ScaleRatioC: 0.37591797
+    - _ScaleRatioC: 0.21618728
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0
@@ -54,7 +54,7 @@ Material:
     - _TextureHeight: 1024
     - _TextureWidth: 1024
     - _UnderlayDilate: 0.36
-    - _UnderlayOffsetX: 0.12
+    - _UnderlayOffsetX: 0.09
     - _UnderlayOffsetY: 0.6
     - _UnderlaySoftness: 0.674
     - _VertexOffsetX: 0
