@@ -171,9 +171,9 @@ MonoBehaviour:
   m_enableVertexGradient: 1
   m_colorMode: 1
   m_fontColorGradient:
-    topLeft: {r: 0.38823533, g: 0.60784316, b: 1, a: 1}
+    topLeft: {r: 0.99433964, g: 0.99637157, b: 1, a: 1}
     topRight: {r: 0.9009434, g: 0.93650216, b: 1, a: 1}
-    bottomLeft: {r: 0.38823533, g: 0.60784316, b: 1, a: 1}
+    bottomLeft: {r: 0.99433964, g: 0.99637157, b: 1, a: 1}
     bottomRight: {r: 0.9009434, g: 0.93650216, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
@@ -308,9 +308,9 @@ MonoBehaviour:
   m_colorMode: 1
   m_fontColorGradient:
     topLeft: {r: 0.867613, g: 0.90689903, b: 0.9150943, a: 1}
-    topRight: {r: 0.14070843, g: 0.79815257, b: 0.9622642, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
     bottomLeft: {r: 0.867613, g: 0.90689903, b: 0.9150943, a: 1}
-    bottomRight: {r: 0.14070843, g: 0.79815257, b: 0.9622642, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
@@ -887,8 +887,8 @@ Transform:
   m_GameObject: {fileID: 803106686}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 0.39, z: 6}
-  m_LocalScale: {x: 5.82, y: 3.16, z: 0}
+  m_LocalPosition: {x: 0.06, y: 0.39, z: 6}
+  m_LocalScale: {x: 5.7, y: 3.16, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -906,7 +906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
   scrollSpeed: 0.27
-  backgroundWidth: 0.65
+  backgroundWidth: 5
 --- !u!1 &972098434
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,7 +1175,7 @@ Transform:
   m_GameObject: {fileID: 1095282903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.05, z: 0}
+  m_LocalPosition: {x: -0.19, y: -5.05, z: 0}
   m_LocalScale: {x: 21.69, y: 2.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1369,8 +1369,8 @@ Transform:
   m_GameObject: {fileID: 1234962081}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.56, y: -1.26, z: 5}
-  m_LocalScale: {x: 6.33, y: 5.18, z: 0}
+  m_LocalPosition: {x: 0.09, y: -1.26, z: 5}
+  m_LocalScale: {x: 5.35, y: 5.18, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1388,7 +1388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
   scrollSpeed: 1
-  backgroundWidth: 1.35
+  backgroundWidth: 5
 --- !u!1 &1324001063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1590,7 +1590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7fae546cf8d16c4cbd8e5202a2b1416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  flyForce: 1
+  flyForce: 2
 --- !u!1 &1376224643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1676,8 +1676,8 @@ Transform:
   m_GameObject: {fileID: 1376224643}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.98, y: 1.58, z: 4}
-  m_LocalScale: {x: 5.36, y: 5.48, z: 0}
+  m_LocalPosition: {x: 0, y: 1.58, z: 4}
+  m_LocalScale: {x: 4.98, y: 5.48, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1695,7 +1695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
   scrollSpeed: 1.25
-  backgroundWidth: 2
+  backgroundWidth: 5
 --- !u!1 &1492102545
 GameObject:
   m_ObjectHideFlags: 0
@@ -1742,7 +1742,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   scoreText: {fileID: 33736151}
   stageText: {fileID: 109237813}
-  baseScorePerSecond: 10
 --- !u!1 &1822820075
 GameObject:
   m_ObjectHideFlags: 0
@@ -1844,6 +1843,7 @@ GameObject:
   - component: {fileID: 2009501611}
   - component: {fileID: 2009501610}
   - component: {fileID: 2009501612}
+  - component: {fileID: 2009501613}
   m_Layer: 0
   m_Name: cloud4
   m_TagString: Untagged
@@ -1918,8 +1918,8 @@ Transform:
   m_GameObject: {fileID: 2009501609}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.01, y: 0.28, z: 3}
-  m_LocalScale: {x: 5, y: 4.43, z: 0}
+  m_LocalPosition: {x: 0.02, y: 0.28, z: 3}
+  m_LocalScale: {x: 4.65, y: 4.43, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1937,7 +1937,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
   scrollSpeed: 1.46
-  backgroundWidth: 2.4
+  backgroundWidth: 2.3
+--- !u!95 &2009501613
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009501609}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4bad6d0994578ea47b734267f5484773, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

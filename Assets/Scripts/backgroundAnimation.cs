@@ -2,11 +2,9 @@ using UnityEngine;
 
 public class ParallaxBackground : MonoBehaviour
 {
-    [Header("Scrolling")]
-    public float scrollSpeed = 2f; // Wie schnell scrollt dieser Layer
+    public float scrollSpeed = 2f;
     
-    [Header("Looping")]
-    public float backgroundWidth = 20f; // Breite des Background-Sprites
+    public float backgroundWidth = 20f;
     
     private Vector3 startPosition;
     
@@ -17,10 +15,10 @@ public class ParallaxBackground : MonoBehaviour
     
     void Update()
     {
-        // Bewege Background nach links
+        //Bewegung nach links
         transform.position += Vector3.left * scrollSpeed * Time.deltaTime;
         
-        // Wenn zu weit links → Reset Position (Seamless Loop!)
+        //Wenn zu weit links → Reset Position
         if (transform.position.x < startPosition.x - backgroundWidth)
         {
             transform.position = startPosition;

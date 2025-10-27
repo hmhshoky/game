@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7904662333272234994}
   - component: {fileID: 7483715481783457032}
   - component: {fileID: 3668349686786616124}
+  - component: {fileID: -1386808207038028606}
   m_Layer: 0
   m_Name: laserWall
   m_TagString: Obstacle
@@ -177,11 +178,32 @@ Animation:
   m_GameObject: {fileID: 8904423282301569718}
   m_Enabled: 1
   serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: c6be93f17092f5345a00441878a6e734, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: c6be93f17092f5345a00441878a6e734, type: 2}
+  m_Animation: {fileID: 7400000, guid: 8cf4d78b9f268c846b49cc627db4d8ea, type: 2}
+  m_Animations: []
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
+--- !u!95 &-1386808207038028606
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8904423282301569718}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 106e826dbcf5f87439646f7907d25f6b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

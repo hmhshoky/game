@@ -5,8 +5,6 @@ public class GameManager : MonoBehaviour
 {
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI stageText;
-
-    public float baseScorePerSecond = 10f;
     private float score = 0f;
     private float gameTime = 0f;
 
@@ -18,12 +16,13 @@ public class GameManager : MonoBehaviour
     //Score wächst mit Stage
     private float[] stageScoreMultipliers = { 1.0f, 1.2f, 1.4f, 1.6f, 1.7f };
     private int[] stageObstacleCounts = { 1, 1, 2, 3, 3 };
+    
     void Update()
     {
         //Zeit läuft hoch
         gameTime += Time.deltaTime;
-        //Score basierend auf Stage
-        float currentScoreRate = baseScorePerSecond * stageScoreMultipliers[currentStage - 1];
+        //Score basierend auf Stage //10 = baseScorePerSecond
+        float currentScoreRate = 10 * stageScoreMultipliers[currentStage - 1];
         score += currentScoreRate * Time.deltaTime; //fps-unabhängig machen
 
         UpdateStage();
@@ -42,27 +41,22 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Z))
         {
-            gameTime = 1;
-            score = 1;
+            score = 100;
         }
         if (Input.GetKey(KeyCode.U))
         {
-            gameTime = 300;
             score = 300;
         }
         if (Input.GetKey(KeyCode.I))
         {
-            gameTime = 800;
             score = 800;
         }
         if (Input.GetKey(KeyCode.O))
         {
-            gameTime = 1400;
             score = 1400;
         }
         if (Input.GetKey(KeyCode.P))
         {
-            gameTime = 2000;
             score = 2000;
         }
     }
@@ -98,7 +92,6 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    
     public float GetSpeedMultiplier()
     {
         //baseSpeed für derzeitige Stage
@@ -111,8 +104,6 @@ public class GameManager : MonoBehaviour
     {
         return stageObstacleCounts[currentStage - 1];
     }
-    
-
     
     public int GetCurrentStage()
     {

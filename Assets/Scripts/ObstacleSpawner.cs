@@ -5,11 +5,11 @@ public class ObstacleSpawner : MonoBehaviour
 {
     public GameObject laserWallPrefab;
     
-    public float minX = 12f;
-    public float maxX = 20f;
+    public float minX = 15f;
+    public float maxX = 25f;
     public float minY = -3f;
-    public float maxY = 3f;
-    public float minDistanceBetweenLasers = 2f;
+    public float maxY = 4f;
+    public float minDistanceBetweenLasers = 2.5f;
     
     private float timer = 0f;
     private float currentSpawnTime;
@@ -18,8 +18,8 @@ public class ObstacleSpawner : MonoBehaviour
     private bool isPaused = false;
     private float pauseTimeRemaining = 0f;
 
-    public float minSpawnTime = 0.1f;
-    public float maxSpawnTime = 0.5f;
+    public float minSpawnTime = 0.5f;
+    public float maxSpawnTime = 2f;
     
     void Start()
     {

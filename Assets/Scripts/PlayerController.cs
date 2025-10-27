@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement")]
-    public float flyForce = 1f;
+    public float flyForce = 2f;
     
     private Rigidbody2D rb;
     private Animator animator;
@@ -18,33 +17,31 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
-        //wenn W gedürckt wird, isFlying = true
+        //wenn W gedrückt wird, isFlying = true
         isFlying = Input.GetKey(KeyCode.W);
 
         if (isFlying)
         {
-            flyForce = flyForce + 0.08f;
+            flyForce += 0.7f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, flyForce);
             isInAir = true;
         }
         if(isFlying == false)
         {
-            flyForce = 1f;
+            flyForce = 2;
         }
 
-        // Animation: Fly
+        //setzt isFlying Parameter (aus Animation) auf true
         animator.SetBool("isFlying", isFlying);
     }
     
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        //wenn es mit dem Boden (getagged mit Ground) kollidiert und isInAir true ist
+        if (collision.gameObject.tag == "Ground" && isInAir)
         {
-            if (isInAir)
-            {
-                animator.SetTrigger("land");
-                isInAir = false;
-            }
+            animator.SetTrigger("land");
+            isInAir = false;
         }
         
         if (collision.gameObject.tag == "Obstacle")
