@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6301323470422382596}
   - component: {fileID: 7904662333272234994}
   - component: {fileID: 7483715481783457032}
-  - component: {fileID: 3668349686786616124}
   - component: {fileID: -1386808207038028606}
   m_Layer: 0
   m_Name: laserWall
@@ -169,22 +168,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleMove
   baseSpeed: 5
---- !u!111 &3668349686786616124
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8904423282301569718}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: 8cf4d78b9f268c846b49cc627db4d8ea, type: 2}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!95 &-1386808207038028606
 Animator:
   serializedVersion: 7
