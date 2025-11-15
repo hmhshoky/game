@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ecdbf6dc34f334daa6daebf7939b79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleMove
-  baseSpeed: 5
+  baseSpeed: 3
 --- !u!95 &-1386808207038028606
 Animator:
   serializedVersion: 7
