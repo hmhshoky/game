@@ -22,11 +22,17 @@ public class GameManager : MonoBehaviour
     //UI Texte
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI stageText;
-    public TextMeshProUGUI gameOverScoreText; //für GameOver Screen
+    public TextMeshProUGUI finalScoreText; //für GameOver Screen
+    public TextMeshProUGUI highScoreText;  //Highscore Home Screen
+    public TextMeshProUGUI lastScoreText;  //letzter Score Home Screen
 
     //Score und Zeit
     private float score = 0f;
     private float gameTime = 0f;
+    
+    //Scores
+    private int highScore = 0;
+    private int lastScore = 0;
 
     //Stage System
     private int currentStage = 1;
@@ -39,6 +45,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        //lade gespeicherte Scores
+        LoadScores();
+        UpdateHomeScreenUI();
+        
         //startet in den HomeScreen
         SetGameState(GameState.HomeMenu);
     }
@@ -85,17 +95,19 @@ public class GameManager : MonoBehaviour
     {
         currentState = newState;
 
-        // Alle Panels ausschalten
+        //standartmäßig alle Panels aus
         homeScreen.SetActive(false);
         pauseScreen.SetActive(false);
         gameOverScreen.SetActive(false);
 
-        // Je nach State das richtige Panel einschalten
+        //nach State das richtige Panel
         switch (currentState)
         {
             case GameState.HomeMenu:
                 homeScreen.SetActive(true);
-                Time.timeScale = 0f;
+                // ✅ NEU: Update Home Screen bei Rückkehr
+                UpdateHomeScreenUI();
+                Time.timeScale = 0f; //pausiert
                 break;
 
             case GameState.Playing:
@@ -109,7 +121,7 @@ public class GameManager : MonoBehaviour
 
             case GameState.GameOver:
                 gameOverScreen.SetActive(true);
-                gameOverScoreText.text = "Final Score: " + Mathf.FloorToInt(score) + "m";
+                finalScoreText.text = "Final Score: " + Mathf.FloorToInt(score) + "m";
                 Time.timeScale = 0f;
                 break;
         }
@@ -122,10 +134,14 @@ public class GameManager : MonoBehaviour
         gameTime = 0f;
         currentStage = 1;
         previousStage = 1;
+    
+        DestroyAllObstacles();
+        ResetPlayer();
 
         SetGameState(GameState.Playing);
     }
 
+    //Methoden für die Buttons und GameOver
     public void PauseGame()
     {
         SetGameState(GameState.Paused);
@@ -138,6 +154,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        SaveScores();
         SetGameState(GameState.GameOver);
     }
 
@@ -173,6 +190,63 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void DestroyAllObstacles()
+    {
+        //alle GameObjects mit dem Tag "Obstacle"
+        GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+        
+        //löscht jedes einzelne
+        foreach (GameObject obstacle in obstacles)
+        {
+            Destroy(obstacle);
+        }
+    }
+
+    void ResetPlayer()
+    {
+        PlayerController player = FindFirstObjectByType<PlayerController>();
+
+        //setzt Position zurück
+        player.transform.position = new Vector3(-5f, -3f, 0f);
+        
+        //setzt Velocity auf 0
+        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+        rb.linearVelocity = Vector2.zero;
+    }
+
+    void LoadScores()
+    {
+        //PlayerPrefs.GetInt holt saved Werte
+        //0, wenn nix da ist
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        lastScore = PlayerPrefs.GetInt("LastScore", 0);
+    }
+
+    void SaveScores()
+    {
+        int currentScore = Mathf.FloorToInt(score);
+        
+        // Letzter Score ist immer der aktuelle
+        lastScore = currentScore;
+        PlayerPrefs.SetInt("LastScore", lastScore);
+        
+        //Highscore
+        if (currentScore > highScore)
+        {
+            highScore = currentScore;
+            PlayerPrefs.SetInt("HighScore", highScore);
+        }
+        
+        //speichert die Daten auf die Festplatte
+        PlayerPrefs.Save();
+    }
+
+    void UpdateHomeScreenUI()
+    {
+        highScoreText.text = "Highscore: " + highScore + "m";
+        lastScoreText.text = "Last Score: " + lastScore + "m";
+    }
+
     public float GetSpeedMultiplier()
     {
         return stageBaseSpeeds[currentStage - 1];
@@ -183,8 +257,21 @@ public class GameManager : MonoBehaviour
         return stageObstacleCounts[currentStage - 1];
     }
 
-    public int GetCurrentStage()
+    public GameState GetCurrentState()
+    {
+        return currentState;
+    }
+
+    // ✅ NEU: Diese Methode hier einfügen!
+    public int getCurrentStage()
     {
         return currentStage;
     }
+
+    // ✅ NEU: Füge Score hinzu (für Coins)
+public void AddScore(float amount)
+{
+    score += amount;
+    Debug.Log("Coin gesammelt! +" + amount + " Punkte");
+}
 }

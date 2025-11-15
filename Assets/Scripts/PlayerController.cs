@@ -3,51 +3,57 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float flyForce = 2f;
-    
+
     private Rigidbody2D rb;
     private Animator animator;
+    private GameManager gameManager;
+
     private bool isFlying = false;
     private bool isInAir = false;
-    
+    private float fallVelocity = 0f;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        gameManager = FindFirstObjectByType<GameManager>();
     }
-    
+
     void Update()
     {
-        //wenn W gedrückt wird, isFlying = true
+        //wenn W gedrückt wird -> true
         isFlying = Input.GetKey(KeyCode.W);
 
         if (isFlying)
         {
-            //damit es nicht fps abhängig ist
             flyForce += 0.7f * Time.deltaTime * 60f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, flyForce);
             isInAir = true;
-        }
-        if(isFlying == false)
-        {
+        }else{
             flyForce = 2;
         }
-
-        //setzt isFlying Parameter (aus Animation) auf true
+        //übergibt isFlying den true Wert für Flug Animation
         animator.SetBool("isFlying", isFlying);
+        
+        if (isInAir)
+        {
+            fallVelocity = rb.linearVelocity.y;
+        }
     }
-    
+
     void OnCollisionEnter2D(Collision2D collision)
     {
-        //wenn es mit dem Boden (getagged mit Ground) kollidiert und isInAir true ist
-        if (collision.gameObject.tag == "Ground" && isInAir)
+        if (collision.gameObject.tag == "Ground" && isInAir && fallVelocity < -17f)
         {
             animator.SetTrigger("land");
             isInAir = false;
+            fallVelocity = 0f;
         }
-        
+
         if (collision.gameObject.tag == "Obstacle")
         {
-            Time.timeScale = 0f;
+            gameManager.GameOver();
         }
     }
 }
