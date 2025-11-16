@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 2865421382999151634}
   - component: {fileID: 8512085824401488076}
   - component: {fileID: 5943026906618763426}
-  - component: {fileID: 1567546843203703072}
   - component: {fileID: -2648280294646462651}
+  - component: {fileID: 3078032586005702590}
   m_Layer: 0
   m_Name: laserMoving
   m_TagString: Obstacle
@@ -31,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 5861553964346994234}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.37413, y: 2.46776, z: 0}
-  m_LocalScale: {x: 3.7407405, y: 4.1171427, z: 1}
+  m_LocalPosition: {x: 2.65603, y: -2.00096, z: 0}
+  m_LocalScale: {x: 6, y: 6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,12 +84,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 680187125540710195, guid: a0d939c26b8ffd949bcacfc37435774a, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 2849012248032114830, guid: d6562ff7a63462c40abb85b57c94dca1, type: 3}
+  m_Color: {r: 1, g: 0.6556604, b: 0.8030474, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.01, y: 0.99}
+  m_Size: {x: 0.14, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -129,17 +129,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.000000007450581, y: 0.0041895807}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.26, y: 0.63}
-    newSize: {x: 1.01, y: 0.99}
+    oldSize: {x: 0.14, y: 0.32}
+    newSize: {x: 0.14, y: 0.32}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.19, y: 0.55}
+  m_Size: {x: 0.094710246, y: 0.26648325}
   m_EdgeRadius: 0
 --- !u!114 &8512085824401488076
 MonoBehaviour:
@@ -169,28 +169,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleMove
   baseSpeed: 3
---- !u!95 &1567546843203703072
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5861553964346994234}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 106e826dbcf5f87439646f7907d25f6b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &-2648280294646462651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,4 +182,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaserMoving
   moveSpeed: 2
-  moveRange: 3
+  moveRange: 2
+--- !u!95 &3078032586005702590
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5861553964346994234}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1d451fe538f90ff43871e4e9b4ef2ce0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

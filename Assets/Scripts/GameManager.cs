@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
         GameOver
     }
 
-    private GameState currentState = GameState.HomeMenu;
+    private GameState currentState;
 
     //UI Panels
     public GameObject homeScreen;
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI lastScoreText;  //letzter Score Home Screen
 
     //Score und Zeit
-    private float score = 0f;
+    public float score = 0f;
     private float gameTime = 0f;
     
     //Scores
@@ -39,8 +39,8 @@ public class GameManager : MonoBehaviour
     private int previousStage = 1;
 
     private float[] stageZone = { 0f, 300f, 800f, 1400f, 2000f };
-    private float[] stageBaseSpeeds = { 3f, 3.1f, 3.3f, 3.4f, 3.5f };
-    private float[] stageScoreMultipliers = { 1.0f, 1.2f, 1.4f, 1.6f, 1.7f };
+    private float[] stageBaseSpeeds = { 3f, 3.2f, 3.3f, 5f, 6f };
+    private float[] stageScoreMultipliers = { 1.0f, 1.2f, 1.3f, 1.4f, 1.5f };
     private int[] stageObstacleCounts = { 1, 1, 2, 3, 3 };
 
     void Start()
@@ -91,6 +91,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void LoadScores()
+    {
+        //PlayerPrefs.GetInt holt saved Werte
+        //0, wenn nix da ist
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        lastScore = PlayerPrefs.GetInt("LastScore", 0);
+    }
+    
+    void UpdateHomeScreenUI()
+    {
+        highScoreText.text = "Highscore: " + highScore + "m";
+        lastScoreText.text = "Last Score: " + lastScore + "m";
+    }
+
     public void SetGameState(GameState newState)
     {
         currentState = newState;
@@ -105,7 +119,6 @@ public class GameManager : MonoBehaviour
         {
             case GameState.HomeMenu:
                 homeScreen.SetActive(true);
-                // ✅ NEU: Update Home Screen bei Rückkehr
                 UpdateHomeScreenUI();
                 Time.timeScale = 0f; //pausiert
                 break;
@@ -126,10 +139,37 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    void UpdateStage()
+    {
+        //geht durch jede Stage durch
+        for (int i = 0; i < stageZone.Length - 1; i++)
+        {
+            //wenn aktuelle Score größer als aktuelle und kleiner als nächste Stage ist
+            if (score >= stageZone[i] && score < stageZone[i + 1])
+            {
+                currentStage = i + 1; //Stage wird erhöht
+                return;
+            }
+        }
+
+        //wenn Score größer ist als die letzte Stage
+        if (score >= stageZone[stageZone.Length - 1])
+        {
+            currentStage = 5; //letzte Stage
+        }
+    }
+
+    void stagePause()
+    {
+        ObstacleSpawner spawner = FindFirstObjectByType<ObstacleSpawner>();
+        spawner.PauseSpawning(2f);
+        spawner.UpdateSpawnTimesForStage();
+    }
     
+    //Methoden für die Buttons und GameOver
     public void StartGame()
     {
-        //resetted alles
         score = 0f;
         gameTime = 0f;
         currentStage = 1;
@@ -137,11 +177,9 @@ public class GameManager : MonoBehaviour
     
         DestroyAllObstacles();
         ResetPlayer();
-
         SetGameState(GameState.Playing);
     }
 
-    //Methoden für die Buttons und GameOver
     public void PauseGame()
     {
         SetGameState(GameState.Paused);
@@ -163,31 +201,23 @@ public class GameManager : MonoBehaviour
         SetGameState(GameState.HomeMenu);
     }
 
-    void UpdateStage()
+    void SaveScores()
     {
-        for (int i = 0; i < stageZone.Length - 1; i++)
+        int currentScore = Mathf.FloorToInt(score);
+        
+        //letzter Score ist immer der aktuelle
+        lastScore = currentScore;
+        PlayerPrefs.SetInt("LastScore", lastScore);
+        
+        //Highscore
+        if (currentScore > highScore)
         {
-            if (score >= stageZone[i] && score < stageZone[i + 1])
-            {
-                currentStage = i + 1;
-                return;
-            }
+            highScore = currentScore;
+            PlayerPrefs.SetInt("HighScore", highScore);
         }
-
-        if (score >= stageZone[stageZone.Length - 1])
-        {
-            currentStage = 5;
-        }
-    }
-
-    void stagePause()
-    {
-        ObstacleSpawner spawner = FindFirstObjectByType<ObstacleSpawner>();
-        if (spawner != null)
-        {
-            spawner.PauseSpawning(2f);
-            spawner.UpdateSpawnTimesForStage();
-        }
+        
+        //speichert die Daten auf die Festplatte
+        PlayerPrefs.Save();
     }
 
     void DestroyAllObstacles()
@@ -214,39 +244,6 @@ public class GameManager : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
     }
 
-    void LoadScores()
-    {
-        //PlayerPrefs.GetInt holt saved Werte
-        //0, wenn nix da ist
-        highScore = PlayerPrefs.GetInt("HighScore", 0);
-        lastScore = PlayerPrefs.GetInt("LastScore", 0);
-    }
-
-    void SaveScores()
-    {
-        int currentScore = Mathf.FloorToInt(score);
-        
-        // Letzter Score ist immer der aktuelle
-        lastScore = currentScore;
-        PlayerPrefs.SetInt("LastScore", lastScore);
-        
-        //Highscore
-        if (currentScore > highScore)
-        {
-            highScore = currentScore;
-            PlayerPrefs.SetInt("HighScore", highScore);
-        }
-        
-        //speichert die Daten auf die Festplatte
-        PlayerPrefs.Save();
-    }
-
-    void UpdateHomeScreenUI()
-    {
-        highScoreText.text = "Highscore: " + highScore + "m";
-        lastScoreText.text = "Last Score: " + lastScore + "m";
-    }
-
     public float GetSpeedMultiplier()
     {
         return stageBaseSpeeds[currentStage - 1];
@@ -261,17 +258,8 @@ public class GameManager : MonoBehaviour
     {
         return currentState;
     }
-
-    // ✅ NEU: Diese Methode hier einfügen!
     public int getCurrentStage()
     {
         return currentStage;
     }
-
-    // ✅ NEU: Füge Score hinzu (für Coins)
-public void AddScore(float amount)
-{
-    score += amount;
-    Debug.Log("Coin gesammelt! +" + amount + " Punkte");
-}
 }

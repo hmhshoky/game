@@ -12,8 +12,7 @@ public class ObstacleSpawner : MonoBehaviour
     public float spawnX = 20f;
     
     //Lane Positionen
-//Lane Positionen
-private float[] laneYPositions = { -2.5f, 0.5f, 3f }; // ✅ Angepasst an dein Spielfeld    
+    private float[] laneYPositions = { -2.5f, 0.5f, 3f }; // ✅ Angepasst an dein Spielfeld    
     //Timing
     private float timer = 0f;
     private float currentSpawnTime;

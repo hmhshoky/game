@@ -2,41 +2,33 @@ using UnityEngine;
 
 public class CoinCollector : MonoBehaviour
 {
-    public int coinValue = 100;
-    
     void OnTriggerEnter2D(Collider2D other)
     {
-        //Prüft ob Player
+        //prüft ob Player
         if (other.gameObject.CompareTag("Player"))
         {
-            //Finde GameManager und gib Punkte
+            //gibt GameManager.score 100 Extra Punkte
             GameManager gameManager = FindFirstObjectByType<GameManager>();
-            if (gameManager != null)
-            {
-                gameManager.AddScore(coinValue);
-            }
+            gameManager.score += 100 ;
             
-            //Lösche Coin
+            //lösche Coin
             Destroy(gameObject);
         }
     }
     
-void Update()
-{
-    //Bewegt sich nach links (GLEICHE Speed wie Obstacles)
-    float baseSpeed = 3f; //Gleich wie ObstacleMove
-    GameManager gameManager = FindFirstObjectByType<GameManager>();
-    if (gameManager != null)
+    void Update()
     {
-        baseSpeed *= gameManager.GetSpeedMultiplier();
+        //Bewegung nach links
+        float baseSpeed = 3f; //gleich wie ObstacleMove
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        baseSpeed *=  gameManager.GetSpeedMultiplier();
+        
+        transform.position += Vector3.left * baseSpeed * Time.deltaTime;
+        
+        //löschen wenn zu weit links
+        if (transform.position.x < -15f)
+        {
+            Destroy(gameObject);
+        }
     }
-    
-    transform.position += Vector3.left * baseSpeed * Time.deltaTime;
-    
-    //Lösche wenn zu weit links
-    if (transform.position.x < -15f)
-    {
-        Destroy(gameObject);
-    }
-}
 }

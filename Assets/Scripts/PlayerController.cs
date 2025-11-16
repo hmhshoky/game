@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
         if (isFlying)
         {
-            flyForce += 0.7f * Time.deltaTime * 60f;
+            flyForce += 0.6f * Time.deltaTime * 60f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, flyForce);
             isInAir = true;
         }else{
