@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //wenn W gedrückt wird -> true
-        isFlying = Input.GetKey(KeyCode.W);
+        isFlying = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow);
 
         if (isFlying)
         {
@@ -33,8 +33,9 @@ public class PlayerController : MonoBehaviour
         }else{
             flyForce = 2;
         }
-        //übergibt isFlying den true Wert für Flug Animation
+        //übergibt die true Werte
         animator.SetBool("isFlying", isFlying);
+        animator.SetBool("isInAir", isInAir);
         
         if (isInAir)
         {
@@ -44,12 +45,20 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground" && isInAir && fallVelocity < -17f)
+         if (collision.gameObject.tag == "Ground")
         {
-            animator.SetTrigger("land");
-            isInAir = false;
-            fallVelocity = 0f;
+            if (isInAir)
+            {
+                if (fallVelocity < -17f)
+                {
+                    animator.SetTrigger("land");
+                }
+                
+                isInAir = false;
+                fallVelocity = 0f;
+            }
         }
+
 
         if (collision.gameObject.tag == "Obstacle")
         {

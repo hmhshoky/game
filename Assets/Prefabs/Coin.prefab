@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6299626069859232755}
   m_Layer: 0
   m_Name: coin
-  m_TagString: Player
+  m_TagString: Coin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -142,6 +142,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinCollector
   coinValue: 100
+  baseSpeed: 3
+  coinSound: {fileID: 8300000, guid: b6059e936a3aeac42a12aed32906c882, type: 3}
 --- !u!95 &6299626069859232755
 Animator:
   serializedVersion: 7

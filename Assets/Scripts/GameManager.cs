@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,34 +24,75 @@ public class GameManager : MonoBehaviour
     //UI Texte
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI stageText;
-    public TextMeshProUGUI finalScoreText; //für GameOver Screen
-    public TextMeshProUGUI highScoreText;  //Highscore Home Screen
-    public TextMeshProUGUI lastScoreText;  //letzter Score Home Screen
+    public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI highScoreText;
+    public TextMeshProUGUI lastScoreText;
+
+    //Score Interaktionen
+    private Color ogScoreColor;
+    private Color ogStageColor;
+    private float scoreColorTimer = 0f;
+    private bool isScoreYellow = false;
 
     //Score und Zeit
     public float score = 0f;
     private float gameTime = 0f;
-    
-    //Scores
     private int highScore = 0;
     private int lastScore = 0;
 
     //Stage System
     private int currentStage = 1;
     private int previousStage = 1;
+    private float[] stageZone = { 0f, 1000f, 2000f, 3000f, 4000f, 5000f, 6000f, 7000f, 8000f, 10000f };
+    private float[] stageBaseSpeeds = { 3f, 3.3f, 3.4f, 3.8f, 4f, 4.5f, 5f, 5.3f, 5.7f, 6f };
+    private float[] stageScoreMultipliers = { 1.0f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f, 2f };
 
-    private float[] stageZone = { 0f, 300f, 800f, 1400f, 2000f };
-    private float[] stageBaseSpeeds = { 3f, 3.2f, 3.3f, 5f, 6f };
-    private float[] stageScoreMultipliers = { 1.0f, 1.2f, 1.3f, 1.4f, 1.5f };
-    private int[] stageObstacleCounts = { 1, 1, 2, 3, 3 };
+    //Audio
+    public AudioClip buttonsfx;    
+    public AudioClip skyNoise;
+    public AudioClip collisionsfx;
+    public AudioClip track1;
+    public AudioClip track2;
+    private AudioSource sfx; //für sfx
+    private AudioSource music; //für Musik
+     private AudioSource ambient;
+    private bool isTrack2Playing = false;
+
+    //Hintergrund Farbe pro Stage
+    private Color[] stageBackgroundColors = new Color[]
+    {
+        new Color(1f, 1f, 1f),
+        new Color(0.6f, 0.85f, 1f),     
+        new Color(0.4f, 0.75f, 1f),     
+        new Color(1f, 0.85f, 0.5f),     
+        new Color(1f, 0.6f, 0.3f),      
+        new Color(1f, 0.4f, 0.25f),    
+        new Color(0.8f, 0.3f, 0.6f),   
+        new Color(0.5f, 0.2f, 0.6f),    
+        new Color(0.3f, 0.15f, 0.5f),   
+        new Color(0.15f, 0.15f, 0.35f), 
+    };
 
     void Start()
     {
-        //lade gespeicherte Scores
+        sfx = gameObject.AddComponent<AudioSource>();
+
+        //Original Farben speichern
+        ogScoreColor = scoreText.color;
+        ogStageColor = stageText.color;
+
+        music = gameObject.AddComponent<AudioSource>();
+        music.loop = true; //loopen
+        music.volume = 0.4f; //Lautstärke
+
+        ambient = gameObject.AddComponent<AudioSource>();
+        ambient.loop = true;
+        ambient.volume = 0.3f;
+
+        PlaySkyNoise();
         LoadScores();
-        UpdateHomeScreenUI();
+        UpdateHomeScreenUI(); 
         
-        //startet in den HomeScreen
         SetGameState(GameState.HomeMenu);
     }
 
@@ -57,34 +100,46 @@ public class GameManager : MonoBehaviour
     {
         if (currentState == GameState.Playing)
         {
-            //Zeit läuft hoch
+            //Zeit läuft
             gameTime += Time.deltaTime;
 
-            //Score basierend auf Stage
+            //wieviele Punkte pro Sekunde * StageScoreMultiplier
             float currentScoreRate = 10 * stageScoreMultipliers[currentStage - 1];
-            score += currentScoreRate * Time.deltaTime;
+            score += currentScoreRate * Time.deltaTime; //hochaddieren
 
             UpdateStage();
 
-            //Wenn Stage gewechselt wurde
+            //wenn Stage gewechselt wurde
             if (currentStage != previousStage)
             {
-                stagePause();
+                StagePause();
+                ChangeBackgroundColor(); 
                 previousStage = currentStage;
             }
 
-            //UI Update
+            //wenn Score gelb aufgeleuchet ist
+            if (isScoreYellow)
+            {
+                scoreColorTimer -= Time.deltaTime;
+                if (scoreColorTimer <= 0f)
+                {
+                    scoreText.color = ogScoreColor;
+                    isScoreYellow = false;
+                }
+            }
+
+            //Score Anzeige
             scoreText.text = "Score: " + Mathf.FloorToInt(score) + "m";
             stageText.text = "Stage: " + currentStage;
 
-            if (Input.GetKey(KeyCode.Z)) score = 100;
-            if (Input.GetKey(KeyCode.U)) score = 300;
-            if (Input.GetKey(KeyCode.I)) score = 800;
-            if (Input.GetKey(KeyCode.O)) score = 1400;
-            if (Input.GetKey(KeyCode.P)) score = 2000;
+            //Debug Keys
+            if (Input.GetKey(KeyCode.U)) score = 1000;
+            if (Input.GetKey(KeyCode.I)) score = 4000;
+            if (Input.GetKey(KeyCode.O)) score = 8000;
+            if (Input.GetKey(KeyCode.P)) score = 10000;
         }
 
-        //Pause mit Escape-Taste und nur wenn playing
+        //wenn Escape und Spielend
         if (Input.GetKeyDown(KeyCode.Escape) && currentState == GameState.Playing)
         {
             PauseGame();
@@ -93,8 +148,7 @@ public class GameManager : MonoBehaviour
 
     void LoadScores()
     {
-        //PlayerPrefs.GetInt holt saved Werte
-        //0, wenn nix da ist
+        //holt Score aus Unitys Cookies sonst 0
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         lastScore = PlayerPrefs.GetInt("LastScore", 0);
     }
@@ -109,27 +163,28 @@ public class GameManager : MonoBehaviour
     {
         currentState = newState;
 
-        //standartmäßig alle Panels aus
+        //alles standartmäßig aus
         homeScreen.SetActive(false);
         pauseScreen.SetActive(false);
         gameOverScreen.SetActive(false);
 
-        //nach State das richtige Panel
         switch (currentState)
         {
             case GameState.HomeMenu:
                 homeScreen.SetActive(true);
                 UpdateHomeScreenUI();
-                Time.timeScale = 0f; //pausiert
+                Time.timeScale = 0f;
                 break;
 
             case GameState.Playing:
-                Time.timeScale = 1f; //Spiel läuft
+                Time.timeScale = 1f;
                 break;
 
             case GameState.Paused:
                 pauseScreen.SetActive(true);
                 Time.timeScale = 0f;
+                music.Pause();
+                ambient.Pause();
                 break;
 
             case GameState.GameOver:
@@ -142,104 +197,136 @@ public class GameManager : MonoBehaviour
 
     void UpdateStage()
     {
-        //geht durch jede Stage durch
+        //geht durch jede StageZone
         for (int i = 0; i < stageZone.Length - 1; i++)
         {
-            //wenn aktuelle Score größer als aktuelle und kleiner als nächste Stage ist
+            //wenn Score kleiner als StageZone und kleiner als nächste StageZone
             if (score >= stageZone[i] && score < stageZone[i + 1])
             {
-                currentStage = i + 1; //Stage wird erhöht
+                currentStage = i + 1;
                 return;
             }
         }
 
-        //wenn Score größer ist als die letzte Stage
+        //wenn höchste Stage
         if (score >= stageZone[stageZone.Length - 1])
         {
-            currentStage = 5; //letzte Stage
+            currentStage = 10; //Stageanzahl anpassen (derzeit 10)
         }
     }
 
-    void stagePause()
+    void StagePause()
     {
         ObstacleSpawner spawner = FindFirstObjectByType<ObstacleSpawner>();
         spawner.PauseSpawning(2f);
-        spawner.UpdateSpawnTimesForStage();
     }
     
-    //Methoden für die Buttons und GameOver
     public void StartGame()
     {
         score = 0f;
         gameTime = 0f;
         currentStage = 1;
         previousStage = 1;
-    
-        DestroyAllObstacles();
-        ResetPlayer();
+        PlaySkyNoise();
+        StartTrack1();
         SetGameState(GameState.Playing);
     }
 
     public void PauseGame()
     {
+        ButtonSfx();
+        SaveScores();
         SetGameState(GameState.Paused);
     }
 
     public void ResumeGame()
     {
         SetGameState(GameState.Playing);
+        music.UnPause(); //Musik unpausieren
+        ambient.UnPause();
     }
 
     public void GameOver()
     {
+        CollisionSfx();
+        music.Stop();
         SaveScores();
         SetGameState(GameState.GameOver);
     }
 
     public void BackToMenu()
     {
+        DestroyAllObstacles();
+        ResetPlayer();
+        ResetBackground();
+
+        music.Stop();
+
+        scoreText.text = "";
+        stageText.text = "";
         SetGameState(GameState.HomeMenu);
     }
+
+    public void RestartGame()
+    {
+        //reset alles wie bei StartGame
+        score = 0f;
+        gameTime = 0f;
+        currentStage = 1;
+        previousStage = 1;
+        
+        DestroyAllObstacles();
+        ResetPlayer();
+        ResetBackground();
+        StartTrack1();
+        PlaySkyNoise();
+        
+        SetGameState(GameState.Playing);
+    }
+
+    
 
     void SaveScores()
     {
         int currentScore = Mathf.FloorToInt(score);
         
-        //letzter Score ist immer der aktuelle
+        //letzter Score erstellen
         lastScore = currentScore;
         PlayerPrefs.SetInt("LastScore", lastScore);
         
-        //Highscore
+        //wenn derzeitiger CSore größer ist als Highscore
         if (currentScore > highScore)
         {
             highScore = currentScore;
             PlayerPrefs.SetInt("HighScore", highScore);
         }
         
-        //speichert die Daten auf die Festplatte
+        //speichern
         PlayerPrefs.Save();
     }
 
     void DestroyAllObstacles()
     {
-        //alle GameObjects mit dem Tag "Obstacle"
         GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
         
-        //löscht jedes einzelne
+        //alle obstacles in obstacle-Array löschen
         foreach (GameObject obstacle in obstacles)
         {
             Destroy(obstacle);
+        }
+        GameObject[] coins = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (GameObject coin in coins)
+        {
+            Destroy(coin);
         }
     }
 
     void ResetPlayer()
     {
         PlayerController player = FindFirstObjectByType<PlayerController>();
-
-        //setzt Position zurück
-        player.transform.position = new Vector3(-5f, -3f, 0f);
+        player.transform.position = new Vector3(-5f, -3f, 0f); //SpawnPosition Player
         
-        //setzt Velocity auf 0
+        //Velocity resetten
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         rb.linearVelocity = Vector2.zero;
     }
@@ -249,17 +336,104 @@ public class GameManager : MonoBehaviour
         return stageBaseSpeeds[currentStage - 1];
     }
 
-    public int GetMaxObstacleCount()
-    {
-        return stageObstacleCounts[currentStage - 1];
-    }
-
     public GameState GetCurrentState()
     {
         return currentState;
     }
+    
     public int getCurrentStage()
     {
         return currentStage;
+    }
+    
+    public void AddScore(float amount)
+    {
+        score += amount;
+        StartCoroutine(ScoreBlink());
+        
+        //wenn Stage größer als 8
+        if (currentStage == 8 && !isTrack2Playing)
+        {
+            float randomChance = Random.Range(1, 11); // 1:10 Chance
+            
+            if (randomChance == 1)
+            {
+                startTrack2();
+            }
+        }
+    }
+    
+    void StartTrack1()
+    {
+        // Stop + Play = Restart
+        music.Stop();
+        music.clip = track1;
+        music.Play();
+        //Track2 zurücksetzen
+        isTrack2Playing = false;
+    }
+
+    void startTrack2()
+    {
+        music.Stop();
+        music.clip = track2;
+        music.Play();
+        isTrack2Playing = true;
+    }
+
+    void PlaySkyNoise()
+    {
+        ambient.clip = skyNoise;
+        ambient.Play();
+    }
+    void StopSkyNoise()
+    {
+        ambient.Stop();
+    }
+
+    //Ienumerator ist der Typ for Coroutinen
+    IEnumerator ScoreBlink()
+    {
+        scoreText.color = Color.yellow;
+        scoreColorTimer = 0.4f;
+        isScoreYellow = true;
+        yield return null;
+    }
+    
+    public void ButtonSfx()
+    {
+        sfx.PlayOneShot(buttonsfx, 0.3f);
+    }
+
+    public void CollisionSfx()
+    {
+        sfx.PlayOneShot(collisionsfx, 0.5f);
+    }
+
+    void ChangeBackgroundColor()
+    {
+        //Farbe für die aktuelle Stage
+        Color targetColor = stageBackgroundColors[currentStage - 1];
+        
+        //alle Backgrounds und Farbe ändern
+        EndlessBackground[] backgrounds = FindObjectsByType<EndlessBackground>(FindObjectsSortMode.None);
+        
+        foreach (EndlessBackground bg in backgrounds)
+        {   
+            //targetColor=oben die Colors, 2 = duration
+            bg.SetColor(targetColor, 2);
+        }
+    }
+
+    void ResetBackground()
+    {
+        EndlessBackground[] backgrounds = FindObjectsByType<EndlessBackground>(FindObjectsSortMode.None);
+        
+        foreach (EndlessBackground bg in backgrounds)
+        {
+            bg.ResetPosition();
+            //setzt Farbe sofort auf Stage 1 zurück
+            bg.SetColor(stageBackgroundColors[0], 0f);
+        }
     }
 }
